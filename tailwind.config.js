@@ -24,5 +24,7 @@ module.exports = {
       body: ['Inter', 'sans-serif']
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
