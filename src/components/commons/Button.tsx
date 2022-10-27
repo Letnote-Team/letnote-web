@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, ButtonHTMLAttributes } from "react";
 
 const ButtonThemeConfig = {
   type: {
@@ -14,26 +14,28 @@ const ButtonThemeConfig = {
 }
 
 type ButtonType = {
-  type?: 'primary' | 'secondary' | 'outlined';
-  size?: 'md' | 'xl';
-  children?: ReactNode;
+  buttonType?: 'primary' | 'secondary' | 'outlined';
+  buttonSize?: 'md' | 'xl';
 };
 
 export const Button = ({
-  type = 'primary',
-  size = 'md',
+  buttonType = 'primary',
+  buttonSize = 'md',
   children,
+  className,
   ...props
-}: ButtonType) => {
+}: ButtonHTMLAttributes<HTMLButtonElement> & ButtonType) => {
   return (
     <button className={`
         rounded
         font-bold
         text-center
         transition-colors
-        ${ButtonThemeConfig.type[type]}
-        ${ButtonThemeConfig.size[size]}
+        ${ButtonThemeConfig.type[buttonType]}
+        ${ButtonThemeConfig.size[buttonSize]}
+        ${className}
       `}
+
       {...props}
     >
       {children}

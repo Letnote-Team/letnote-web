@@ -13,8 +13,8 @@ export const NavBar = ({ onlyLogo }: navBarProps) => {
       </div>
       {onlyLogo || 
         <nav>
-          <Button type="secondary">Cadastre-se</Button>
-          <Button type="primary">Entrar</Button>
+          <Button buttonType="secondary">Cadastre-se</Button>
+          <Button buttonType="primary">Entrar</Button>
         </nav>
       }
     </header>

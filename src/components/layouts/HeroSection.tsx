@@ -32,7 +32,7 @@ export const HeroSection = () => (
         </p>
       </div>
       <Link href='/auth/signup'>
-        <Button type="primary" size="xl">
+        <Button buttonType="primary" buttonSize="xl">
           Começar
         </Button>
       </Link>
