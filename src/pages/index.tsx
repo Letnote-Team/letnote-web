@@ -1,13 +1,11 @@
-import { NextPage } from "next";
-import { HeroSection } from "../components/layouts/HeroSection";
-import { Layout } from "../components/layouts/layout";
+import dynamic from 'next/dynamic';
+import { useState } from 'react';
+import { Editor } from '../components/Editor';
 
-const Home: NextPage = () => {
+const Home = () => {
   return (
-    <Layout>
-      <HeroSection />
-    </Layout>
+    <Editor />
   );
-};
+}
 
 export default Home;
