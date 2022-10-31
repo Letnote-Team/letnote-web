@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { Button } from "../../components/commons/Button";
 import { Input } from "../../components/forms/Input";
@@ -7,10 +8,10 @@ const Signup = () => {
   return (
     <Layout onlyLogo={true}>
       <div className="h-full flex justify-center items-center">
-        <section className="w-90 h-fit space-y-4">
-          <div className="m-auto w-9/12 text-center space-y-2">
-            <h1 className="text-4xl">Se cadastre</h1>
-            <p>Insira seus dados para realizar um novo cadastro</p>
+        <section className="w-90 h-fit space-y-2">
+          <div className="m-auto w-11/12 text-center space-y-1">
+            <h1 className="font-semibold xl:text-2xl 2xl:text-4xl">Se cadastre</h1>
+            <p className="text-gray-text">Insira seus dados para realizar um novo cadastro</p>
           </div>
           <div className="flex-grow border-t border-gray-300"></div>
           <form className="space-y-2">
@@ -22,6 +23,20 @@ const Signup = () => {
               Cadastrar
             </Button>
           </form>
+          <div className="relative flex items-center">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="flex-shrink mx-4 text-gray-400">ou</span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
+          <div className="text-center">
+            <p>
+              Já possui uma conta? Entre com ela {" "}
+              <Link href="/auth/signin">
+                <a className="text-primary-700">aqui</a>
+              </Link>
+              .
+            </p>
+          </div>
         </section>
       </div>
     </Layout>

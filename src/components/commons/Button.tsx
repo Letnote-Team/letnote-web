@@ -31,6 +31,10 @@ export const Button = ({
         font-bold
         text-center
         transition-colors
+        outline-none
+        focus:ring-2
+        focus:ring-offset-1
+        focus:ring-primary
         ${ButtonThemeConfig.type[buttonType]}
         ${ButtonThemeConfig.size[buttonSize]}
         ${className}

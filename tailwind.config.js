@@ -8,7 +8,8 @@ module.exports = {
       colors: {
         primary: '#37A2F0',
         "primary-600": '#2483C7',
-        "primary-700": '#237AB9'
+        "primary-700": '#237AB9',
+        "gray-text": "#6F6F6F"
       },
       keyframes: {
         'float': {
