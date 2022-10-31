@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { Button } from "../commons/Button";
 
@@ -7,14 +8,26 @@ type navBarProps = {
 
 export const NavBar = ({ onlyLogo }: navBarProps) => {
   return (
-    <header className="flex justify-between w-screen py-4 px-4 sm:px-12 md:px-16 lg:px-24 xl:px-52 2xl:px-64 ">
-      <div className="text-3xl font-bold ">
-        <span className="text-primary-700">let</span>note
-      </div>
+    <header className="flex justify-between w-screen py-4 px-4 xl:px-20 2xl:px-64 ">
+      <Link href="/">
+        <a>
+          <div className="text-3xl font-bold ">
+            <span className="text-primary-700">let</span>note
+          </div>
+        </a>
+      </Link>
       {onlyLogo || 
         <nav>
-          <Button buttonType="secondary">Cadastre-se</Button>
-          <Button buttonType="primary">Entrar</Button>
+          <Link href="/auth/signup">
+            <a>
+              <Button buttonType="secondary">Cadastre-se</Button>
+            </a>
+          </Link>
+          <Link href="/auth/signin">
+            <a>
+              <Button buttonType="primary">Entrar</Button>
+            </a>
+          </Link>
         </nav>
       }
     </header>
