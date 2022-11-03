@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import { HeroSection } from "../components/layouts/HeroSection";
 import { Layout } from "../components/layouts/layout";
 

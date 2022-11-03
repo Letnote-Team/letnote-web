@@ -7,7 +7,6 @@ import Embed from "@editorjs/embed";
 import Header from "@editorjs/header";
 import Image from "@editorjs/image";
 import InlineCode from "@editorjs/inline-code";
-import LinkTool from "@editorjs/link";
 import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
@@ -23,7 +22,6 @@ const EDITOR_JS_TOOLS = {
   marker: Marker,
   list: List,
   code: Code,
-  linkTool: LinkTool,
   image: Image,
   raw: Raw,
   header: Header,
