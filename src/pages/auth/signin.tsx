@@ -17,7 +17,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignInParamType>();
-  const { signIn } = useContext(AuthContext);
+  const { signIn, loading } = useContext(AuthContext);
 
   const onSubmit: SubmitHandler<SignInParamType> = async ({
     email,
@@ -51,12 +51,12 @@ const Signup = () => {
               title="Senha"
               type="password"
               {...register("password", {
-                required: "Senha é obrigatório"
+                required: "Senha é obrigatório",
               })}
               error={errors.password}
               placeholder="Insira uma senha segura"
             />
-            <Button buttonType="primary" className="w-full">
+            <Button loading={loading} buttonType="primary" className="w-full">
               Entrar
             </Button>
           </form>

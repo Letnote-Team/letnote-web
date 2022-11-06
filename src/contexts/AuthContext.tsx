@@ -1,8 +1,7 @@
-import axios from "axios";
 import Router from "next/router";
 import { setCookie } from "nookies";
-import { useState } from "react";
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useState } from "react";
+import { api } from "../services/api";
 
 type UserType = {
   name: string;
@@ -23,6 +22,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   signIn: SignInType;
   signUp: SignUpType;
+  loading: boolean;
 };
 
 type AuthApiResponseType = {
@@ -34,11 +34,12 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const isAuthenticated = !!user;
 
   const saveUser = (user: UserType, token: string) => {
-    setCookie(undefined, "letnote.token", token, {
+    setCookie(undefined, "letnote.user", JSON.stringify({ user, token }), {
       maxAge: 10 * 365 * 24 * 60 * 60, // infinite-ish
     });
 
@@ -48,36 +49,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn: SignInType = async (email, password) => {
-    const { user, token } = (
-      await axios.post<AuthApiResponseType>(
-        "http://localhost:8000/api/auth/login",
-        {
-          email,
-          password,
-        }
-      )
-    ).data;
+    setLoading(true);
 
-    saveUser(user, token);
+    try {
+      const res = await api.post<AuthApiResponseType>("auth/login", {
+        email,
+        password,
+      });
+      const { token, user } = res.data;
+
+      saveUser(user, token);
+    } catch (e) {
+      console.log(e);
+    }
+
+    setLoading(false);
   };
 
   const signUp: SignUpType = async (name, email, password) => {
-    const { user, token } = (
-      await axios.post<AuthApiResponseType>(
-        "http://localhost:8000/api/auth/register",
-        {
+    setLoading(true);
+
+    try {
+      const { user, token } = (
+        await api.post<AuthApiResponseType>("auth/register", {
           name,
           email,
           password,
-        }
-      )
-    ).data;
+        })
+      ).data;
 
-    saveUser(user, token);
+      saveUser(user, token);
+    } catch (e) {
+      console.log(e);
+    }
+
+    setLoading(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signIn, signUp, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

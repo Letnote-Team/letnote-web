@@ -23,7 +23,7 @@ const SignUp = () => {
     handleSubmit,
     watch,
   } = useForm<SignUpParamType & HiddenSignUpParamType>();
-  const { signUp } = useContext(AuthContext);
+  const { signUp, loading } = useContext(AuthContext);
   const password = useRef({});
 
   password.current = watch("password", "");
@@ -91,7 +91,7 @@ const SignUp = () => {
               })}
               placeholder="Confirme sua senha"
             />
-            <Button buttonType="primary" className="w-full">
+            <Button loading={loading} buttonType="primary" className="w-full">
               Cadastrar
             </Button>
           </form>
