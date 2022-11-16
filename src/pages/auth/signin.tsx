@@ -5,6 +5,7 @@ import { Button } from "../../components/commons/Button";
 import { Input } from "../../components/forms/Input";
 import { Layout } from "../../components/layouts/layout";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useToast } from "../../hooks/useToast";
 
 type SignInParamType = {
   email: string;
@@ -18,6 +19,7 @@ const Signup = () => {
     formState: { errors },
   } = useForm<SignInParamType>();
   const { signIn, loading } = useContext(AuthContext);
+  const toast = useToast();
 
   const onSubmit: SubmitHandler<SignInParamType> = async ({
     email,

@@ -3,34 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    @apply text-[#333]
-  }
-
-  h1.ce-header {
-    display: block;
-    font-size: 2em;
-    font-weight: bold;
-  }
-
-  h2.ce-header {
-    display: block;
-    font-size: 1.5em;
-    font-weight: bold;
-  }
-
-  h3.ce-header {
-    display: block;
-    font-size: 1.17em;
-    font-weight: bold;
-  }
-
-  .ce-header {
-    padding: 0.6em 0 3px;
-    margin: 0;
-    line-height: 1.25em;
-    outline: none;
-  }
 }
 
 @layer utilities {
@@ -42,4 +14,33 @@
     animation-fill-mode: forwards;
   }
 
+}
+
+
+html {
+  @apply text-[#333]
+}
+
+h1.ce-header {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+h2.ce-header {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+h3.ce-header {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.ce-paragraph {
+  font-size: 1.1rem;
+}
+
+.ce-block__content, 
+.ce-toolbar__content {
+  max-width: 90%;  /* example value, adjust for your own use case */
 }

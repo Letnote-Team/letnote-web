@@ -1,5 +1,5 @@
-import axios from "axios";
-import { parseCookies } from "nookies";
+import axios, { AxiosError } from "axios";
+import { parseCookies, destroyCookie } from "nookies";
 import { useToast } from "../hooks/useToast";
 
 export const getAPIClient = (ctx?: any) => {

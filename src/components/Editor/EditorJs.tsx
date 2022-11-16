@@ -1,43 +1,35 @@
-import CheckList from "@editorjs/checklist";
-import Code from "@editorjs/code";
-import Delimiter from "@editorjs/delimiter";
-import EditorJs, { EditorConfig } from "@editorjs/editorjs";
-import Embed from "@editorjs/embed";
-import Header from "@editorjs/header";
-import Image from "@editorjs/image";
-import InlineCode from "@editorjs/inline-code";
-import List from "@editorjs/list";
-import Marker from "@editorjs/marker";
-import Quote from "@editorjs/quote";
-import Raw from "@editorjs/raw";
-import SimpleImage from "@editorjs/simple-image";
-import Table from "@editorjs/table";
-import { useEffect, useRef } from "react";
+import EditorJs, { API, EditorConfig } from "@editorjs/editorjs";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { useNote } from "../../hooks/useNote";
 import { EditorTitle } from "./EditorTitle";
-
-const EDITOR_JS_TOOLS = {
-  embed: Embed,
-  table: Table,
-  marker: Marker,
-  list: List,
-  code: Code,
-  image: Image,
-  raw: Raw,
-  header: Header,
-  quote: Quote,
-  checklist: CheckList,
-  delimiter: Delimiter,
-  inlineCode: InlineCode,
-  simpleImage: SimpleImage,
-};
+import { EDITOR_JS_TOOLS } from "./tools";
 
 export type EditorProps = EditorConfig & {
-  setEditorRef?: (editorRef: EditorJs) => void;
   title: string;
 };
 
 const Editor = ({ data, ...props }: EditorProps) => {
   const editorJs = useRef<EditorJs | null>(null);
+  const router = useRouter();
+  const id = router.query?.id;
+  const { updateNote, getNoteById } = useNote();
+  const [timeoutEvent, setTimeoutEvent] = useState<NodeJS.Timeout>();
+  const loading = timeoutEvent !== undefined;
+
+  const onChange = (api: API, event: CustomEvent<any>) => {
+    // if (id === "new-note") return;
+    // if (loading) return;
+    // if (timeoutEvent) clearTimeout(timeoutEvent);
+    // const timeout = setTimeout(async () => {
+    //   updateNote({
+    //     id: Number(id),
+    //     body: await api.saver.save(),
+    //   });
+    //   setTimeoutEvent(undefined);
+    // }, 5000);
+    // setTimeoutEvent(timeout);
+  };
 
   useEffect(() => {
     if (editorJs.current === null) {
@@ -45,28 +37,27 @@ const Editor = ({ data, ...props }: EditorProps) => {
         holder: "editorjs",
         tools: EDITOR_JS_TOOLS,
         placeholder: "Comece escrevendo suas anotações aqui!",
-        onReady,
+        onChange,
+        readOnly: id === "new-note",
         data,
         ...props,
       });
     }
   });
 
-  const onReady = () => {
-    props.setEditorRef?.(editorJs.current!);
-  };
-
   useEffect(() => {
     if (data) {
       editorJs.current?.clear?.();
 
-      if (Object.keys(data).length > 0) editorJs.current?.render?.(data);
+      if (data.blocks?.length > 0) {
+        editorJs.current?.render?.(data);
+      }
     }
   }, [data]);
 
   return (
     <div>
-      <div className="max-w-[660px] m-auto ">
+      <div className="max-w-[90%] m-auto ">
         <EditorTitle title={props.title} editorJs={editorJs} />
         <div className="flex-grow border-t border-gray-300"></div>
       </div>

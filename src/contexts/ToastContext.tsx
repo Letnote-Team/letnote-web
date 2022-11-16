@@ -5,8 +5,14 @@ import {
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import * as RadixToast from "@radix-ui/react-toast";
-import { createContext, ReactNode, useMemo, useState } from "react";
-import { toastInterceptor } from "../utils/toastInterceptor";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
+import { toastInterceptor } from "../interceptors/toastInterceptor";
 
 const ToastThemeConfig = {
   type: {
@@ -52,7 +58,7 @@ export function ToastProvider(props: { children: ReactNode }) {
     }, 200);
   };
 
-  useMemo(() => toastInterceptor(show), []);
+  toastInterceptor(show);
 
   return (
     <ToastContext.Provider

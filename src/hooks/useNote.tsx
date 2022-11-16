@@ -1,5 +1,6 @@
 import { OutputData } from "@editorjs/editorjs";
-import { useQuery } from "@tanstack/react-query";
+import { Saver } from "@editorjs/editorjs/types/api";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { APP_CLIENT_INTERNALS } from "next/dist/shared/lib/constants";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,7 +21,13 @@ type UpdateNoteType = {
   body?: OutputData;
 };
 
+type UpdateConfigType = {
+  sync: boolean;
+  syncDelayMs: number;
+};
+
 export const useNote = (initialData?: NoteType[]) => {
+  const queryClient = useQueryClient();
   const { data: notes } = useQuery<NoteType[]>(
     ["notes"],
     async () => await (await api.get("notes")).data.data,
@@ -43,10 +50,10 @@ export const useNote = (initialData?: NoteType[]) => {
   };
 
   const updateNote = async ({ id, ...updateData }: UpdateNoteType) => {
-    const request = await api.put("notes/" + id, updateData);
-    const data = request.data.data as NoteType;
-
-    return data;
+    if (getNoteById(id.toString()).body.blocks !== updateData.body?.blocks) {
+      api.put("notes/" + id, updateData);
+      queryClient.invalidateQueries(["notes"]);
+    }
   };
 
   const deleteNote = (id: number) => {
