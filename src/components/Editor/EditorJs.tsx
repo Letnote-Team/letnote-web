@@ -2,7 +2,6 @@ import CheckList from "@editorjs/checklist";
 import Code from "@editorjs/code";
 import Delimiter from "@editorjs/delimiter";
 import EditorJs, { EditorConfig } from "@editorjs/editorjs";
-import { Caret } from "@editorjs/editorjs/types/api";
 import Embed from "@editorjs/embed";
 import Header from "@editorjs/header";
 import Image from "@editorjs/image";
@@ -31,7 +30,13 @@ const EDITOR_JS_TOOLS = {
   inlineCode: InlineCode,
   simpleImage: SimpleImage,
 };
-const Editor = (props: EditorConfig & {setCaret?: (caret: Caret) => void}) => {
+
+export type EditorProps = EditorConfig & {
+  setEditorRef?: (editorRef: EditorJs) => void;
+  title: string;
+};
+
+const Editor = ({ data, ...props }: EditorProps) => {
   const editorJs = useRef<EditorJs | null>(null);
 
   useEffect(() => {
@@ -40,18 +45,32 @@ const Editor = (props: EditorConfig & {setCaret?: (caret: Caret) => void}) => {
         holder: "editorjs",
         tools: EDITOR_JS_TOOLS,
         placeholder: "Comece escrevendo suas anotações aqui!",
-        ...props
+        onReady,
+        data,
+        ...props,
       });
     }
   });
 
+  const onReady = () => {
+    props.setEditorRef?.(editorJs.current!);
+  };
+
+  useEffect(() => {
+    if (data) {
+      editorJs.current?.clear?.();
+
+      if (Object.keys(data).length > 0) editorJs.current?.render?.(data);
+    }
+  }, [data]);
+
   return (
     <div>
       <div className="max-w-[660px] m-auto ">
-        <EditorTitle editorJs={editorJs} />
+        <EditorTitle title={props.title} editorJs={editorJs} />
         <div className="flex-grow border-t border-gray-300"></div>
       </div>
-      <div id='editorjs'/>
+      <div id="editorjs" />
     </div>
   );
 };
