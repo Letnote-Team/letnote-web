@@ -76,7 +76,9 @@ export const TreeItem = ({
           handleNoteClick();
           e.stopPropagation();
         }}
-        className={`group flex gap-1 pr-1 py-1 items-center cursor-pointer hover:bg-primary-100 transition-colors rounded font-medium hover:font-semibold select-none
+        className={`group flex gap-1 pr-1 py-1 items-center cursor-pointer
+                hover:bg-primary-100 transition-colors rounded font-medium
+                  hover:font-semibold select-none focus:outline-none
                   ${item.hasChildren ? "pl-1" : "pl-2"}
                   ${isSelected ? "bg-primary-100 italic" : ""}`}
       >
@@ -100,7 +102,7 @@ export const TreeItem = ({
           </span>
         )}
         <span className="truncate">{item.data.title}</span>
-        <span className="ml-auto hidden group-hover:flex">
+        <span className="ml-auto hidden group-hover:flex group-focus:flex">
           <span className="p-1 hover:bg-primary-200 rounded hover:shadow-sm">
             <PlusIcon
               onClick={(e) => {
