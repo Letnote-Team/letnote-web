@@ -1,7 +1,11 @@
 import EditorJs, { API, EditorConfig } from "@editorjs/editorjs";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useNote } from "../../hooks/useNote";
+import { Button } from "../commons/Button";
+import { EditorDropdown } from "./EditorDropdown";
+import { Separator } from "../commons/Separator";
 import { EditorTitle } from "./EditorTitle";
 import { EDITOR_JS_TOOLS } from "./tools";
 
@@ -40,6 +44,7 @@ const Editor = ({ data, ...props }: EditorProps) => {
         onChange,
         readOnly: id === "new-note",
         data,
+        autofocus: false,
         ...props,
       });
     }
@@ -56,10 +61,15 @@ const Editor = ({ data, ...props }: EditorProps) => {
   }, [data]);
 
   return (
-    <div>
+    <div className="relative">
+      <div className="absolute top-0 right-0 -m-4">
+        <EditorDropdown />
+      </div>
       <div className="max-w-[90%] m-auto ">
-        <EditorTitle title={props.title} editorJs={editorJs} />
-        <div className="flex-grow border-t border-gray-300"></div>
+        <div>
+          <EditorTitle title={props.title} editorJs={editorJs} />
+        </div>
+        <Separator />
       </div>
       <div id="editorjs" />
     </div>

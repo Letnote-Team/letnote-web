@@ -1,10 +1,11 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 const ButtonThemeConfig = {
   type: {
-    primary: "bg-primary text-white hover:bg-primary-600",
-    secondary: "font text-neutral-700 hover:text-black",
-    outlined: "bg-primary text-white hover:bg-primary-600",
+    primary: "bg-primary text-white hover:bg-primary-600 focus:ring-primary",
+    secondary: "bg-primary-600 text-white hover:text-black focus:ring-primary",
+    outlined: "text-neutral-700 hover:text-black focus:ring-primary",
+    danger: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500",
   },
 
   size: {
@@ -14,7 +15,7 @@ const ButtonThemeConfig = {
 };
 
 type ButtonType = {
-  buttonType?: "primary" | "secondary" | "outlined";
+  buttonType?: "primary" | "secondary" | "outlined" | "danger";
   buttonSize?: "md" | "xl";
   loading?: boolean;
 };
@@ -26,7 +27,11 @@ export const Button = ({
   children,
   className,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & ButtonType) => {
+}: DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> &
+  ButtonType) => {
   return (
     <button
       className={`
@@ -37,7 +42,7 @@ export const Button = ({
         outline-none
         focus:ring-2
         focus:ring-offset-1
-        focus:ring-primary
+        focus:outline-none
         ${loading && "opacity-80"}
         ${ButtonThemeConfig.type[buttonType]}
         ${ButtonThemeConfig.size[buttonSize]}
@@ -46,7 +51,10 @@ export const Button = ({
       {...props}
     >
       {loading ? (
-        <div className="mx-auto animate-spin w-6 h-6 border-2 border-primary border-t-white border-r-white rounded-[50%]" />
+        <div
+          className={`mx-auto animate-spin w-6 h-6 border-2  border-t-white border-r-white rounded-[50%]
+        ${buttonType === "danger" ? "border-red-500" : "border-primary"}`}
+        />
       ) : (
         children
       )}

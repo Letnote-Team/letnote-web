@@ -55,13 +55,7 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       );
 
     if (id !== "new-note") {
-      updateNote(
-        { id: Number(id), title: text },
-        {
-          sync: true,
-          syncDelayMs: 3000,
-        }
-      );
+      updateNote({ id: Number(id), title: text });
     }
   };
 
@@ -77,8 +71,8 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       empty:before:cursor-text
       empty:before:content-[attr(data-placeholder)] empty:text-gray-text empty:font-semibold"
       contentEditable
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
+      // onKeyDown={handleKeyDown}
+      // onKeyUp={handleKeyUp}
       data-placeholder="Digite seu título aqui..."
     >
       {title}

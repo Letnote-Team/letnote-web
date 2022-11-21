@@ -15,18 +15,16 @@ const handleRepsonse = (show: typeof ShowFn, res: AxiosResponse | undefined) => 
 };
 
 export const toastInterceptor = (show: typeof ShowFn) => {
-  // api.interceptors.response.clear();
+  api.interceptors.response.clear();
 
-  // api.interceptors.response.use((response) => {
-  //   console.log("oi?");
-  //   handleRepsonse(show, response);
+  api.interceptors.response.use((response) => {
+    // handleRepsonse(show, response);
 
-  //   return response;
-  // }, (error) => {
-  //   console.log("oi?");
-  //   handleRepsonse(show, error.response);
+    return response;
+  }, (error) => {
+    handleRepsonse(show, error.response);
 
-  //   return Promise.reject(error);
-  // });
+    return Promise.reject(error);
+  });
 
 };

@@ -3,7 +3,7 @@ import { setCookie } from "nookies";
 import { createContext, ReactNode, useState } from "react";
 import { api } from "../services/api";
 
-type UserType = {
+export type UserType = {
   name: string;
   email: string;
   avatar: string;

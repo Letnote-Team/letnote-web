@@ -20,8 +20,8 @@ export const useTree = (initialData?: TreeData) => {
     queryClient.setQueryData(["notesTree"], newTree);
   };
 
-  const refetchTree = () => {
-    queryClient.refetchQueries(["notesTree"]);
+  const refetchTree = async () => {
+    await queryClient.refetchQueries(["notesTree"]);
   };
 
   return { tree, updateTree, refetchTree };

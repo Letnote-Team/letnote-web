@@ -56,8 +56,8 @@ export const useNote = (initialData?: NoteType[]) => {
     }
   };
 
-  const deleteNote = (id: number) => {
-    api.delete("notes/" + id);
+  const deleteNote = async (id: number) => {
+    await api.delete("notes/" + id);
   };
 
   return { notes, getNoteById, createNote, updateNote, deleteNote };

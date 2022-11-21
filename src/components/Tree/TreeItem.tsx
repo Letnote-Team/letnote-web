@@ -11,11 +11,12 @@ import {
   PlusIcon,
 } from "@radix-ui/react-icons";
 import Router from "next/router";
+import { AlertDialog } from "../commons/AlertDialog";
 
 type TreeItemProps = {
   updateTree: (newTree: TreeData) => void;
-  deleteNote: (id: number) => void;
-  refetchTree: () => void;
+  deleteNote: (id: number) => Promise<void>;
+  refetchTree: () => Promise<void>;
   tree: TreeData;
   selectedId?: string;
 };
@@ -56,14 +57,14 @@ export const TreeItem = ({
     });
   }
 
-  function handleRemoveNote() {
-    deleteNote(+item.id);
-    refetchTree();
-  }
+  const handleRemoveNote = async () => {
+    await deleteNote(+item.id);
+    await refetchTree();
+  };
 
-  function handleNoteClick() {
+  const handleNoteClick = () => {
     Router.push("/notes/" + item.id, undefined, { shallow: true });
-  }
+  };
 
   return (
     <div
@@ -102,7 +103,7 @@ export const TreeItem = ({
           </span>
         )}
         <span className="truncate">{item.data.title}</span>
-        <span className="ml-auto hidden group-hover:flex group-focus:flex">
+        <span className="ml-auto hidden group-hover:flex group-hover:z-50">
           <span className="p-1 hover:bg-primary-200 rounded hover:shadow-sm">
             <PlusIcon
               onClick={(e) => {
@@ -112,13 +113,16 @@ export const TreeItem = ({
             />
           </span>
           <span className="p-1 hover:bg-red-200 rounded hover:shadow-sm">
-            <Cross2Icon
-              color="#ef4444"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemoveNote();
-              }}
-            />
+            <AlertDialog
+              title="Tem certeza que deseja fazer isso?"
+              desc="Não será possível recuperar essa anotação após sua exclusão."
+              onActionConfirm={handleRemoveNote}
+            >
+              <Cross2Icon
+                onClick={(e) => e.stopPropagation()}
+                color="#ef4444"
+              />
+            </AlertDialog>
           </span>
         </span>
       </div>

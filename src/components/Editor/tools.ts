@@ -9,19 +9,19 @@ import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
 import Raw from "@editorjs/raw";
-import SimpleImage from "@editorjs/simple-image";
+import SimpleImage from "simple-image-editorjs";
 import Table from "@editorjs/table";
+import CodeFlask from "@calumk/editorjs-codeflask";
 
 export const EDITOR_JS_TOOLS = {
   embed: Embed,
   table: Table,
   marker: Marker,
   list: List,
-  code: Code,
-  image: Image,
   raw: Raw,
   header: {
     class: Header,
+    inlineToolbar: true,
     config: {
       levels: [1, 2, 3],
       defaultLevel: 1,
@@ -35,4 +35,5 @@ export const EDITOR_JS_TOOLS = {
   delimiter: Delimiter,
   inlineCode: InlineCode,
   simpleImage: SimpleImage,
+  code: CodeFlask,
 };

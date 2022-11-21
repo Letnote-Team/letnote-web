@@ -9,7 +9,7 @@ type ScrollAreaProps = {
 export const ScrollArea = ({ children, className }: ScrollAreaProps) => {
   return (
     <ScrollAreaRadix.Root className={className}>
-      <ScrollAreaRadix.Viewport className="h-full">
+      <ScrollAreaRadix.Viewport className="h-full pr-1">
         {children}
       </ScrollAreaRadix.Viewport>
       <ScrollAreaRadix.Scrollbar
@@ -18,9 +18,9 @@ export const ScrollArea = ({ children, className }: ScrollAreaProps) => {
       >
         <ScrollAreaRadix.Thumb
           className="flex-1 bg-primary rounded-xl relative
-                                          before:absolute before:top-1/2 before:left-1/2
-                                          before:-translate-x-1/2 before:-translate-y-1/2
-                                          before:w-full before:h-full"
+                    before:absolute before:top-1/2 before:left-1/2
+                    before:-translate-x-1/2 before:-translate-y-1/2
+                    before:w-full before:h-full"
         />
       </ScrollAreaRadix.Scrollbar>
     </ScrollAreaRadix.Root>

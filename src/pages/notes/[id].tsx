@@ -28,7 +28,7 @@ const Notes = ({ notes: initialNotes, tree: initialTree }: NotesProps) => {
 
   return (
     <TreeLayout>
-      <Editor title={note?.title} data={note?.body ?? {}} />
+      <Editor title={note?.title} data={note?.body ?? undefined} />
     </TreeLayout>
   );
 };

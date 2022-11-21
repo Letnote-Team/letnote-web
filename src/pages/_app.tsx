@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </AuthProvider>
       </ToastProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }
