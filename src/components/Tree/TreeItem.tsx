@@ -17,8 +17,8 @@ type TreeItemProps = {
   updateTree: (newTree: TreeData) => void;
   deleteNote: (id: number) => Promise<void>;
   refetchTree: () => Promise<void>;
-  tree: TreeData;
   selectedId?: string;
+  addNewTreeItem: (parent: TreeItemType) => void;
 };
 
 export const TreeItem = ({
@@ -26,40 +26,23 @@ export const TreeItem = ({
   provided,
   onExpand,
   onCollapse,
-  snapshot,
-  updateTree,
   deleteNote,
-  tree,
   selectedId,
   refetchTree,
+  addNewTreeItem,
 }: RenderItemParams & TreeItemProps) => {
   const isSelected = selectedId === item.id;
-
-  function handleAddNewNote() {
-    const newTree: TreeData = mutateTree(tree, item.id, {
-      isExpanded: true,
-      hasChildren: true,
-      children: [...item.children, "new-note"],
-    });
-
-    const newTreeItem: TreeItemType = {
-      id: "new-note",
-      children: [],
-      data: { title: "Sem título", parentId: Number(item.id) },
-      hasChildren: false,
-      isExpanded: false,
-    };
-
-    Object.assign(newTree.items, { "new-note": newTreeItem });
-    updateTree(newTree);
-    Router.push("/notes/new-note", undefined, {
-      shallow: true,
-    });
-  }
 
   const handleRemoveNote = async () => {
     await deleteNote(+item.id);
     await refetchTree();
+  };
+
+  const handleAddNewNote = () => {
+    addNewTreeItem(item);
+    Router.push("/notes/new-note", undefined, {
+      shallow: true,
+    });
   };
 
   const handleNoteClick = () => {

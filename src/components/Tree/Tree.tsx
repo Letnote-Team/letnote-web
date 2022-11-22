@@ -18,7 +18,7 @@ type TreeProps = {
 
 export const Tree = ({ tree }: TreeProps) => {
   const router = useRouter();
-  const { updateTree, refetchTree } = useTree();
+  const { updateTree, refetchTree, addNewTreeItem } = useTree();
   const { updateNote, deleteNote } = useNote();
   const queryClient = useQueryClient();
 
@@ -66,11 +66,11 @@ export const Tree = ({ tree }: TreeProps) => {
       renderItem={(props) =>
         TreeItem({
           ...props,
-          tree,
           updateTree,
           deleteNote,
           selectedId: router.query?.id?.toString(),
           refetchTree,
+          addNewTreeItem,
         })
       }
       onDragEnd={onDragEnd}

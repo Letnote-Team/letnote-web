@@ -5,12 +5,25 @@ import {
   HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { saveAs } from "file-saver";
+import { useNote } from "../../hooks/useNote";
+import { NoteType } from "../../contexts/NoteContext";
 
 export const EditorDropdown = () => {
   const [model, setModel] = useState("linear");
+  const { currentNote } = useNote();
+
+  const handleDownload = () => {
+    const { id: _, parentId: __, ...note } = currentNote as NoteType;
+
+    const file = new Blob([JSON.stringify(note)], {
+      type: "application/json",
+    });
+    saveAs(file, currentNote?.title + ".json");
+  };
 
   return (
-    <DropdownMenu.Root defaultOpen={true}>
+    <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button className=" p-3 rounded shadow-md outline-none">
           <HamburgerMenuIcon />
@@ -50,7 +63,10 @@ export const EditorDropdown = () => {
             </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>
           <DropdownMenu.Separator className="h-[1px] bg-neutral-300 my-2" />
-          <DropdownMenu.Item className="group radix-state-checked:text-primary radix-highlighted:bg-primary-400 flex justify-between items-center gap-6 rounded radix-highlighted:!text-white outline-none px-2 py-1">
+          <DropdownMenu.Item
+            className="group radix-state-checked:text-primary radix-highlighted:bg-primary-400 flex justify-between items-center gap-6 rounded radix-highlighted:!text-white outline-none px-2 py-1"
+            onClick={handleDownload}
+          >
             Fazer download
             <DownloadIcon />
           </DropdownMenu.Item>

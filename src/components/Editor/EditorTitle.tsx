@@ -1,7 +1,9 @@
 import { ItemId, mutateTree } from "@atlaskit/tree";
 import EditorJs, { OutputData } from "@editorjs/editorjs";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { FormEvent, KeyboardEvent, MutableRefObject } from "react";
+import { NoteType } from "../../contexts/NoteContext";
 import { useNote } from "../../hooks/useNote";
 import { useTree } from "../../hooks/useTree";
 
@@ -11,8 +13,9 @@ type EditorTitleProps = {
 };
 
 export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
+  const queryClient = useQueryClient();
   const { tree, updateTree } = useTree();
-  const { createNote, updateNote } = useNote();
+  const { createNote, currentNote, setCurrentNote } = useNote();
   const router = useRouter();
   const id = router.query?.id as string | number;
 
@@ -29,11 +32,14 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
     if (isKeyEnter) {
       e.preventDefault();
 
-      if (id === "new-note") {
+      if (id === "new-note" && tree) {
         const data = (await editorJs.current?.save()) as OutputData;
-        createNote(text, data, tree!.items["new-note"].data.parentId!).then(
-          (note) =>
-            router.push("/notes/" + note.id, undefined, { shallow: true })
+        const parentId = tree!.items["new-note"].data.parentId!;
+        createNote(text, data, parentId === 0 ? null : parentId).then(
+          (note) => {
+            queryClient.invalidateQueries(["notesTree"]);
+            router.push("/notes/" + note.id, undefined, { shallow: true });
+          }
         );
       }
 
@@ -55,7 +61,7 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       );
 
     if (id !== "new-note") {
-      updateNote({ id: Number(id), title: text });
+      setCurrentNote({ ...currentNote, title: text } as NoteType);
     }
   };
 
@@ -71,8 +77,8 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       empty:before:cursor-text
       empty:before:content-[attr(data-placeholder)] empty:text-gray-text empty:font-semibold"
       contentEditable
-      // onKeyDown={handleKeyDown}
-      // onKeyUp={handleKeyUp}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       data-placeholder="Digite seu título aqui..."
     >
       {title}

@@ -2,9 +2,14 @@ import "../../styles/globals.css";
 import type { AppProps } from "next/app";
 import { AuthProvider } from "../contexts/AuthContext";
 import { ToastProvider } from "../contexts/ToastContext";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import {
+  QueryClientProvider,
+  QueryClient,
+  Hydrate,
+} from "@tanstack/react-query";
 import { useState } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { NoteContext, NoteProvider } from "../contexts/NoteContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -23,12 +28,16 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <AuthProvider>
-          <Component {...pageProps} />
-        </AuthProvider>
-      </ToastProvider>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <Hydrate state={pageProps.dehydratedState}>
+        <ToastProvider>
+          <NoteProvider>
+            <AuthProvider>
+              <Component {...pageProps} />
+            </AuthProvider>
+          </NoteProvider>
+        </ToastProvider>
+      </Hydrate>
+      <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>
   );
 }

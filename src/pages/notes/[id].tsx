@@ -1,11 +1,18 @@
 import { TreeData } from "@atlaskit/tree";
+import {
+  dehydrate,
+  QueryClient,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies } from "nookies";
 import { Editor } from "../../components/Editor";
 import TreeLayout from "../../components/layouts/editorLayout";
-import { NoteType, useNote } from "../../hooks/useNote";
+import { noteFetch, NoteType } from "../../contexts/NoteContext";
+import { useNote } from "../../hooks/useNote";
 import { useTree } from "../../hooks/useTree";
 import { getAPIClient } from "../../services/axios";
 
@@ -15,20 +22,21 @@ type NotesProps = {
 };
 
 const Notes = ({ notes: initialNotes, tree: initialTree }: NotesProps) => {
+  const { getNoteById } = useNote();
   useTree(initialTree);
-  const { getNoteById } = useNote(initialNotes);
-  let note = {} as any;
+
+  let note = {} as NoteType;
   const {
     query: { id },
   } = useRouter();
 
   if (id !== "new-note") {
-    note = getNoteById(id!.toString());
+    note = getNoteById(id as string);
   }
 
   return (
     <TreeLayout>
-      <Editor title={note?.title} data={note?.body ?? undefined} />
+      <Editor title={note?.title} data={note?.body} />
     </TreeLayout>
   );
 };
@@ -47,15 +55,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   try {
     if (user) {
+      const queryClient = new QueryClient();
       const treeRequest = await ssrApi.get("/notes/tree");
-      const notesRequest = await ssrApi.get("/notes");
       const tree = treeRequest.data;
-      const notes = notesRequest.data.data;
+      await queryClient.prefetchQuery(
+        ["notes"],
+        async () => (await ssrApi.get("/notes")).data.data
+      );
 
       return {
         props: {
           tree,
-          notes,
+          dehydratedState: dehydrate(queryClient),
         },
       };
     }

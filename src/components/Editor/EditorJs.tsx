@@ -8,6 +8,8 @@ import { EditorDropdown } from "./EditorDropdown";
 import { Separator } from "../commons/Separator";
 import { EditorTitle } from "./EditorTitle";
 import { EDITOR_JS_TOOLS } from "./tools";
+import { NoteType } from "../../contexts/NoteContext";
+import { useToast } from "../../hooks/useToast";
 
 export type EditorProps = EditorConfig & {
   title: string;
@@ -17,22 +19,18 @@ const Editor = ({ data, ...props }: EditorProps) => {
   const editorJs = useRef<EditorJs | null>(null);
   const router = useRouter();
   const id = router.query?.id;
-  const { updateNote, getNoteById } = useNote();
-  const [timeoutEvent, setTimeoutEvent] = useState<NodeJS.Timeout>();
-  const loading = timeoutEvent !== undefined;
+  const { currentNote, setCurrentNote, updateNote, syncCurrentNote } =
+    useNote();
+  const toast = useToast();
+  // const [timeoutEvent, setTimeoutEvent] = useState<NodeJS.Timeout>();
 
-  const onChange = (api: API, event: CustomEvent<any>) => {
-    // if (id === "new-note") return;
-    // if (loading) return;
-    // if (timeoutEvent) clearTimeout(timeoutEvent);
-    // const timeout = setTimeout(async () => {
-    //   updateNote({
-    //     id: Number(id),
-    //     body: await api.saver.save(),
-    //   });
-    //   setTimeoutEvent(undefined);
-    // }, 5000);
-    // setTimeoutEvent(timeout);
+  const onChange = async (api: API, event: CustomEvent<any>) => {
+    if (id === "new-note") return;
+
+    setCurrentNote({
+      ...currentNote,
+      body: await api.saver.save(),
+    } as NoteType);
   };
 
   useEffect(() => {
@@ -42,7 +40,6 @@ const Editor = ({ data, ...props }: EditorProps) => {
         tools: EDITOR_JS_TOOLS,
         placeholder: "Comece escrevendo suas anotações aqui!",
         onChange,
-        readOnly: id === "new-note",
         data,
         autofocus: false,
         ...props,
@@ -51,17 +48,38 @@ const Editor = ({ data, ...props }: EditorProps) => {
   });
 
   useEffect(() => {
-    if (data) {
-      editorJs.current?.clear?.();
+    editorJs.current?.clear?.();
 
+    if (id && id !== "new-note") {
+      syncCurrentNote(+id);
+    }
+
+    if (data) {
       if (data.blocks?.length > 0) {
         editorJs.current?.render?.(data);
       }
     }
-  }, [data]);
+  }, [data, id]);
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onKeyDown={async (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === "s") {
+          e.preventDefault();
+          await updateNote({
+            ...currentNote,
+            body: await editorJs.current?.save(),
+            id: +router.query.id!,
+          });
+          toast.show({
+            title: "Salvo com sucesso",
+            desc: "isso aí com sucesso",
+            type: "success",
+          });
+        }
+      }}
+    >
       <div className="absolute top-0 right-0 -m-4">
         <EditorDropdown />
       </div>

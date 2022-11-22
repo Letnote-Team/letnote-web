@@ -1,22 +1,56 @@
-import { ReactNode } from "react";
-import { useTree } from "../../hooks/useTree";
-import { Logo } from "../commons/Logo";
-import { Tree } from "../Tree/Tree";
-import { Button } from "../commons/Button";
-import { Separator } from "../commons/Separator";
-import { ScrollArea } from "../commons/ScrollArea";
-import { NavItem } from "../NavBar/NavItem";
 import {
   CardStackIcon,
   CheckCircledIcon,
   UploadIcon,
 } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import { ChangeEvent, ReactNode, useEffect } from "react";
+import { NoteType } from "../../contexts/NoteContext";
+import { useNote } from "../../hooks/useNote";
+import { useTree } from "../../hooks/useTree";
+import { Button } from "../commons/Button";
+import { Logo } from "../commons/Logo";
+import { ScrollArea } from "../commons/ScrollArea";
+import { Separator } from "../commons/Separator";
+import { NavItem } from "../NavBar/NavItem";
+import { Tree } from "../Tree/Tree";
 
 const TreeLayout = ({ children }: { children?: ReactNode }) => {
-  const { tree } = useTree();
-  const { asPath } = useRouter();
+  const queryClient = useQueryClient();
+  const { createNote } = useNote();
+  const { tree, addNewTreeItem } = useTree();
+  const { asPath, ...router } = useRouter();
+
+  const handleUploadClick = () => {
+    document.getElementById("upload-button")?.click();
+  };
+
+  useEffect(() => {}, []);
+
+  const handleNoteUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader();
+    const file = e.target.files?.[0];
+
+    if (file) {
+      console.log(reader?.readAsText(file));
+    }
+
+    reader.onloadend = (e) => {
+      const note = JSON.parse(e.target?.result?.toString() ?? "") as NoteType;
+
+      console.log(note);
+      createNote(note.title, note.body);
+      queryClient.refetchQueries(["notesTree"]);
+    };
+  };
+
+  const handleAddNewNote = () => {
+    addNewTreeItem();
+    router.push("/notes/new-note", undefined, {
+      shallow: true,
+    });
+  };
 
   return (
     <div className="flex">
@@ -56,8 +90,23 @@ const TreeLayout = ({ children }: { children?: ReactNode }) => {
             </div>
           </nav>
           <div className="flex gap-0.5">
-            <Button className="flex-1 rounded-r-none">Criar</Button>
-            <Button buttonType="primary" className="rounded-l-none !px-4">
+            <Button
+              onClick={handleAddNewNote}
+              className="flex-1 rounded-r-none"
+            >
+              Criar
+            </Button>
+            <input
+              id="upload-button"
+              type="file"
+              onChange={handleNoteUpload}
+              hidden
+            />
+            <Button
+              buttonType="primary"
+              className="rounded-l-none !px-4"
+              onClick={handleUploadClick}
+            >
               <UploadIcon />
             </Button>
           </div>
