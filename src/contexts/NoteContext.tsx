@@ -1,3 +1,4 @@
+import { mutateTree, TreeData } from "@atlaskit/tree";
 import { OutputData } from "@editorjs/editorjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -9,7 +10,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { Tree } from "../components/Tree/Tree";
 import { api } from "../services/api";
+import { toastInterceptor } from "../utils/toastInterceptor";
 
 export const NoteContext = createContext({} as NoteContextType);
 
@@ -36,8 +39,8 @@ type NoteContextType = {
     parentId?: number
   ) => Promise<NoteType>;
   updateNote: (data: UpdateNoteType) => Promise<void>;
-  deleteNote: (id: number) => Promise<void>;
-  setCurrentNote: (data: NoteType | undefined) => void;
+  deleteNote: (id: string) => Promise<void>;
+  setCurrentNote: Dispatch<SetStateAction<NoteType | undefined>>;
   syncCurrentNote: (id: number) => void;
   currentNote: NoteType | undefined;
 };
@@ -71,7 +74,10 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateNote = async ({ id, ...updateData }: UpdateNoteType) => {
-    if (getNoteById(id.toString()).body.blocks !== updateData.body?.blocks) {
+    if (
+      JSON.stringify(getNoteById(id.toString()).body.blocks) !==
+      JSON.stringify(updateData.body?.blocks)
+    ) {
       const res = await api.put("notes/" + id, updateData);
 
       if (res.status >= 200 && res.status <= 400) {
@@ -80,13 +86,19 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteNote = async (id: number) => {
+  const deleteNote = async (id: string) => {
     await api.delete("notes/" + id);
   };
 
   const syncCurrentNote = (id: number) => {
-    setCurrentNote({ ...getNoteById(id.toString()) });
+    setCurrentNote(getNoteById(id.toString()));
   };
+
+  useEffect(() => {
+    if (id && id !== "new-note") {
+      syncCurrentNote(+id);
+    }
+  }, [id]);
 
   return (
     <NoteContext.Provider

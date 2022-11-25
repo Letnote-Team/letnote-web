@@ -61,7 +61,7 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       );
 
     if (id !== "new-note") {
-      setCurrentNote({ ...currentNote, title: text } as NoteType);
+      setCurrentNote((prev) => ({ ...prev, title: text } as NoteType));
     }
   };
 

@@ -15,7 +15,7 @@ import { AlertDialog } from "../commons/AlertDialog";
 
 type TreeItemProps = {
   updateTree: (newTree: TreeData) => void;
-  deleteNote: (id: number) => Promise<void>;
+  deleteNote: (id: string) => Promise<void>;
   refetchTree: () => Promise<void>;
   selectedId?: string;
   addNewTreeItem: (parent: TreeItemType) => void;
@@ -34,7 +34,10 @@ export const TreeItem = ({
   const isSelected = selectedId === item.id;
 
   const handleRemoveNote = async () => {
-    await deleteNote(+item.id);
+    if (item.id.toString() !== "new-note") {
+      await deleteNote(item.id.toString());
+    }
+
     await refetchTree();
   };
 

@@ -22,15 +22,18 @@ const Editor = ({ data, ...props }: EditorProps) => {
   const { currentNote, setCurrentNote, updateNote, syncCurrentNote } =
     useNote();
   const toast = useToast();
-  // const [timeoutEvent, setTimeoutEvent] = useState<NodeJS.Timeout>();
 
   const onChange = async (api: API, event: CustomEvent<any>) => {
     if (id === "new-note") return;
 
-    setCurrentNote({
-      ...currentNote,
-      body: await api.saver.save(),
-    } as NoteType);
+    const body = await api.saver.save();
+
+    setCurrentNote((prev) => {
+      return {
+        ...prev,
+        body,
+      } as NoteType;
+    });
   };
 
   useEffect(() => {
@@ -48,18 +51,15 @@ const Editor = ({ data, ...props }: EditorProps) => {
   });
 
   useEffect(() => {
-    editorJs.current?.clear?.();
-
-    if (id && id !== "new-note") {
-      syncCurrentNote(+id);
-    }
-
     if (data) {
       if (data.blocks?.length > 0) {
         editorJs.current?.render?.(data);
+        return;
       }
     }
-  }, [data, id]);
+
+    editorJs.current?.clear?.();
+  }, [data]);
 
   return (
     <div
