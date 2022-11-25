@@ -80,8 +80,16 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     ) {
       const res = await api.put("notes/" + id, updateData);
 
-      if (res.status >= 200 && res.status <= 400) {
-        queryClient.refetchQueries(["notes"]);
+      if (res.status >= 200 && res.status <= 400 && notes) {
+        const index = notes.findIndex((note) => note.id === id);
+        const note = notes[index];
+        const { body, parentId, title } = updateData;
+
+        body && (note.body = body);
+        parentId && (note.parentId = parentId);
+        title && (note.title = title);
+
+        queryClient.setQueryData(["notes"], notes);
       }
     }
   };

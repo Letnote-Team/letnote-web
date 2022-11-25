@@ -2,7 +2,7 @@ import { ItemId, mutateTree } from "@atlaskit/tree";
 import EditorJs, { OutputData } from "@editorjs/editorjs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { FormEvent, KeyboardEvent, MutableRefObject } from "react";
+import { FocusEvent, KeyboardEvent, MutableRefObject } from "react";
 import { NoteType } from "../../contexts/NoteContext";
 import { useNote } from "../../hooks/useNote";
 import { useTree } from "../../hooks/useTree";
@@ -33,19 +33,21 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       e.preventDefault();
 
       if (id === "new-note" && tree) {
-        const data = (await editorJs.current?.save()) as OutputData;
-        const parentId = tree!.items["new-note"].data.parentId!;
-        createNote(text, data, parentId === 0 ? null : parentId).then(
-          (note) => {
-            queryClient.invalidateQueries(["notesTree"]);
-            router.push("/notes/" + note.id, undefined, { shallow: true });
-          }
-        );
+        await handleCreateNewNote(text);
       }
 
       editorJs.current?.caret.setToFirstBlock();
     }
   };
+
+  async function handleCreateNewNote(text: string) {
+    const data = (await editorJs.current?.save()) as OutputData;
+    const parentId = tree!.items["new-note"].data.parentId!;
+    createNote(text, data, parentId === 0 ? null : parentId).then((note) => {
+      queryClient.invalidateQueries(["notesTree"]);
+      router.push("/notes/" + note.id, undefined, { shallow: true });
+    });
+  }
 
   const handleKeyUp = (e: KeyboardEvent<HTMLHeadingElement>) => {
     const text = (e.target as HTMLElement).innerText;
@@ -65,6 +67,14 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
     }
   };
 
+  const handleBlur = async (e: FocusEvent<HTMLHeadingElement>) => {
+    if (id === "new-note" && tree) {
+      const text = (e.target as HTMLElement).innerText;
+
+      await handleCreateNewNote(text);
+    }
+  };
+
   return (
     <h1
       className="
@@ -79,6 +89,7 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
       contentEditable
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
+      onBlur={handleBlur}
       data-placeholder="Digite seu título aqui..."
     >
       {title}
