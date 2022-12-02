@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies } from "nookies";
 import { Editor } from "../../components/Editor";
@@ -35,9 +36,11 @@ const Notes = ({ notes: initialNotes, tree: initialTree }: NotesProps) => {
   }
 
   return (
-    <TreeLayout>
-      <Editor title={note?.title} data={note?.body} />
-    </TreeLayout>
+    <>
+      <TreeLayout>
+        <Editor title={note?.title} data={note?.body} />
+      </TreeLayout>
+    </>
   );
 };
 

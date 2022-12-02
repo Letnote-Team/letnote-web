@@ -32,10 +32,6 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
     if (isKeyEnter) {
       e.preventDefault();
 
-      if (id === "new-note" && tree) {
-        await handleCreateNewNote(text);
-      }
-
       editorJs.current?.caret.setToFirstBlock();
     }
   };

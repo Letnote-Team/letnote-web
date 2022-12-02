@@ -74,5 +74,5 @@ module.exports = {
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  plugins: [require("@tailwindcss/forms"), require("tailwindcss-radix")()],
+  plugins: [require("@tailwindcss/forms"), require("tailwindcss-radix")(), require("tailwind-scrollbar")],
 };

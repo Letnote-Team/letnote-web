@@ -16,18 +16,24 @@ import { toastInterceptor } from "../utils/toastInterceptor";
 
 export const NoteContext = createContext({} as NoteContextType);
 
+export interface NoteBodyType extends OutputData {
+  noteModel: string;
+  tags: string[];
+  summary: string;
+}
+
 export type NoteType = {
   id: number | "new-note";
   title: string;
-  body: OutputData;
+  body: NoteBodyType;
   parentId: number | null;
 };
 
-type UpdateNoteType = {
+export type UpdateNoteType = {
   id: number;
   parentId?: number | null;
   title?: string;
-  body?: OutputData;
+  body?: NoteBodyType | null;
 };
 
 type NoteContextType = {
@@ -74,9 +80,12 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateNote = async ({ id, ...updateData }: UpdateNoteType) => {
+    const note = getNoteById(id.toString());
+
     if (
-      JSON.stringify(getNoteById(id.toString()).body.blocks) !==
-      JSON.stringify(updateData.body?.blocks)
+      JSON.stringify(note.body) !== JSON.stringify(updateData.body) ||
+      updateData.title !== note.title ||
+      updateData.parentId !== note.parentId
     ) {
       const res = await api.put("notes/" + id, updateData);
 

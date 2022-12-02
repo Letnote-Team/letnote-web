@@ -14,10 +14,12 @@
     animation-fill-mode: forwards;
   }
 
+  .scrollbar-rounded::-webkit-scrollbar {
+    border-radius: 10px;
+  }
 }
 
-
-html {
+body {
   @apply text-[#333]
 }
 
@@ -39,6 +41,7 @@ h3.ce-header {
 .ce-paragraph {
   font-size: 1.1rem;
 }
+
 
 .ce-block__content, 
 .ce-toolbar__content {

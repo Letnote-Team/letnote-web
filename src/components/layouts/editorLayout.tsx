@@ -1,10 +1,12 @@
 import {
   CardStackIcon,
   CheckCircledIcon,
+  ExitIcon,
   UploadIcon,
 } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
 import { ChangeEvent, ReactNode, useEffect } from "react";
 import { NoteType } from "../../contexts/NoteContext";
 import { useNote } from "../../hooks/useNote";
@@ -58,10 +60,21 @@ const TreeLayout = ({ children }: { children?: ReactNode }) => {
         className="w-64 2xl:w-80 fixed p-4 bg-neutral-50 h-screen top-0 bottom-0 overflow-hidden shadow-neutral-300 shadow-xl"
         aria-label="Sidebar"
       >
-        <Logo />
+        <div className="flex justify-between items-center">
+          <Logo />
+          <button
+            onClick={() => {
+              destroyCookie(null, "letnote.user", { path: "/" });
+              router.push("/product");
+            }}
+            className="outline-none"
+          >
+            <ExitIcon color="red" className="w-5 h-5" />
+          </button>
+        </div>
         <div className="flex justify-between flex-col h-[calc(100%-36px)]">
-          <nav>
-            <div className="mt-4 space-y-1">
+          <nav className="mt-4">
+            {/* <div className="mt-4 space-y-1">
               <NavItem
                 title="Flashcards"
                 isActivated={asPath === "/flashcards"}
@@ -81,7 +94,7 @@ const TreeLayout = ({ children }: { children?: ReactNode }) => {
                 }
               />
             </div>
-            <Separator className="my-2" />
+            <Separator className="my-2" /> */}
             <div className="space-y-2">
               <h1 className="font-bold">ANOTAÇÕES</h1>
               <ScrollArea className="-ml-1 h-96">

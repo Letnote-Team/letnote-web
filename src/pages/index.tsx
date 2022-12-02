@@ -1,22 +1,23 @@
 import { TreeData } from "@atlaskit/tree";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { GetServerSideProps } from "next";
 import { destroyCookie, parseCookies } from "nookies";
 import TreeLayout from "../components/layouts/editorLayout";
 import { UserType } from "../contexts/AuthContext";
-import { NoteType, useNote } from "../hooks/useNote";
+import { NoteType } from "../contexts/NoteContext";
+import { useNote } from "../hooks/useNote";
 import { useTree } from "../hooks/useTree";
 import { getAPIClient } from "../services/axios";
 
 type HomeProps = {
   tree: TreeData;
-  notes: NoteType[];
   user: UserType;
 };
 
-const Home = ({ tree, notes, user }: HomeProps) => {
+const Home = ({ tree, user }: HomeProps) => {
   useTree(tree);
-  useNote(notes);
+  useNote();
 
   return (
     <TreeLayout>
@@ -33,17 +34,20 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   try {
     if (_user) {
+      const queryClient = new QueryClient();
       const { user } = JSON.parse(_user);
       const treeRequest = await ssrApi.get("/notes/tree");
-      const notesRequest = await ssrApi.get("/notes");
       const tree = treeRequest.data;
-      const notes = notesRequest.data.data;
+      await queryClient.prefetchQuery(
+        ["notes"],
+        async () => (await ssrApi.get("/notes")).data.data
+      );
 
       return {
         props: {
           user,
           tree,
-          notes,
+          dehydratedState: dehydrate(queryClient),
         },
       };
     }

@@ -1,6 +1,7 @@
 import Router from "next/router";
 import { setCookie } from "nookies";
 import { createContext, ReactNode, useState } from "react";
+import { useToast } from "../hooks/useToast";
 import { api } from "../services/api";
 
 export type UserType = {
@@ -35,6 +36,7 @@ export const AuthContext = createContext({} as AuthContextType);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const isAuthenticated = !!user;
 
@@ -45,6 +47,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setUser(user);
 
+    toast.show({
+      title: "Sucesso!",
+      desc: "Autenticado com sucesso.",
+      type: "success",
+    });
     Router.push("/");
   };
 

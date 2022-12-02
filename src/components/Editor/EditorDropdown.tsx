@@ -9,9 +9,9 @@ import { saveAs } from "file-saver";
 import { useNote } from "../../hooks/useNote";
 import { NoteType } from "../../contexts/NoteContext";
 
-export const EditorDropdown = () => {
-  const [model, setModel] = useState("linear");
-  const { currentNote } = useNote();
+export const EditorDropdown = ({ handleOnChange }: any) => {
+  const { currentNote, setCurrentNote } = useNote();
+  const [model, setModel] = useState(currentNote?.body.noteModel ?? "linear");
 
   const handleDownload = () => {
     const { id: _, parentId: __, ...note } = currentNote as NoteType;
@@ -40,7 +40,10 @@ export const EditorDropdown = () => {
           </DropdownMenu.Label>
           <DropdownMenu.RadioGroup
             value={model}
-            onValueChange={setModel}
+            onValueChange={(value) => {
+              setModel(value);
+              handleOnChange(value);
+            }}
             className="w-full"
           >
             <DropdownMenu.RadioItem
