@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@ajite/editorjs-image-base64@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@ajite/editorjs-image-base64/-/editorjs-image-base64-0.0.2.tgz#5061a455ab022158803efa12893dbb0a0b13ea07"
+  integrity sha512-eO5+LN952wak8kllw5rajMLtPLcFjk44U54MO+UEOPHW67ybckvWVUBkX5z/1Y11JTVhc1Z3FRpFk8U0Vb907Q==
+
 "@atlaskit/tree@^8.6.3":
   version "8.6.3"
   resolved "https://registry.yarnpkg.com/@atlaskit/tree/-/tree-8.6.3.tgz#5403c77128b4664c3609e37a44d61e1e8c878576"

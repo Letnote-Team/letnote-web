@@ -74,7 +74,7 @@ export function ToastProvider(props: { children: ReactNode }) {
               open={open}
               onOpenChange={setOpen}
               className={`
-                fixed inset-x-4
+                fixed inset-x-4 z-50
                 bottom-4 right-4 left-auto min-w-[20rem] max-w-md cursor-pointer rounded-sm
                 px-4 py-3 shadow-md
 

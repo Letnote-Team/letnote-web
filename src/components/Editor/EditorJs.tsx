@@ -80,6 +80,9 @@ const Editor = ({ data, ...props }: EditorProps) => {
 
   useEffect(() => {
     if (data) {
+      setNoteModel(data.noteModel);
+      setTags(data.tags ?? []);
+      setSummary(data.summary ?? "");
       if (data.blocks?.length > 0) {
         editorJs.current?.render?.(data);
         return;
@@ -95,6 +98,15 @@ const Editor = ({ data, ...props }: EditorProps) => {
       onKeyDown={async (e) => {
         if (e.ctrlKey && e.key.toLowerCase() === "s") {
           e.preventDefault();
+          if (id === "new-note") {
+            toast.show({
+              title: "Anotação não atualizada",
+              desc: "Essa anotação ainda não foi criada, portanto não é possível atualizá-la",
+              type: "warning",
+            });
+
+            return;
+          }
           await updateNote({
             ...currentNote,
             body: await getBody(),
@@ -102,7 +114,7 @@ const Editor = ({ data, ...props }: EditorProps) => {
           });
           toast.show({
             title: "Salvo com sucesso",
-            desc: "isso aí com sucesso",
+            desc: "",
             type: "success",
           });
         }
@@ -152,7 +164,7 @@ const Editor = ({ data, ...props }: EditorProps) => {
                       if (text.trim() !== "") {
                         (e.target as HTMLElement).innerText = "";
 
-                        setTags([...(tags ?? []), text]);
+                        setTags(([...(tags ?? []), text]));
                       }
                       e.preventDefault();
                     }

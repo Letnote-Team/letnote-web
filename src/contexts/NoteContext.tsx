@@ -26,7 +26,7 @@ export type NoteType = {
   id: number | "new-note";
   title: string;
   body: NoteBodyType;
-  parentId: number | null;
+  parent_id: number | null;
 };
 
 export type UpdateNoteType = {
@@ -85,7 +85,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     if (
       JSON.stringify(note.body) !== JSON.stringify(updateData.body) ||
       updateData.title !== note.title ||
-      updateData.parentId !== note.parentId
+      updateData.parentId !== note.parent_id
     ) {
       const res = await api.put("notes/" + id, updateData);
 
@@ -95,7 +95,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
         const { body, parentId, title } = updateData;
 
         body && (note.body = body);
-        parentId && (note.parentId = parentId);
+        parentId && (note.parent_id = parentId);
         title && (note.title = title);
 
         queryClient.setQueryData(["notes"], notes);

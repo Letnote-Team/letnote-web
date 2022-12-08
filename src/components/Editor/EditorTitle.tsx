@@ -39,7 +39,7 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
   async function handleCreateNewNote(text: string) {
     const data = (await editorJs.current?.save()) as OutputData;
     const parentId = tree!.items["new-note"].data.parentId!;
-    createNote(text, data, parentId === 0 ? null : parentId).then((note) => {
+    createNote(text, data, parentId).then((note) => {
       queryClient.invalidateQueries(["notesTree"]);
       router.push("/notes/" + note.id, undefined, { shallow: true });
     });
@@ -64,9 +64,8 @@ export const EditorTitle = ({ editorJs, title }: EditorTitleProps) => {
   };
 
   const handleBlur = async (e: FocusEvent<HTMLHeadingElement>) => {
-    if (id === "new-note" && tree) {
-      const text = (e.target as HTMLElement).innerText;
-
+    const text = (e.target as HTMLElement).innerText;
+    if (id === "new-note" && text !== "" && tree) {
       await handleCreateNewNote(text);
     }
   };

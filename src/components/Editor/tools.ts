@@ -9,7 +9,7 @@ import List from "@editorjs/list";
 import Marker from "@editorjs/marker";
 import Raw from "@editorjs/raw";
 // @ts-ignore
-import SimpleImage from "simple-image-editorjs";
+import SimpleImage from "@editorjs/simple-image";
 import Table from "@editorjs/table";
 // @ts-ignore
 import CodeFlask from "@calumk/editorjs-codeflask";
@@ -51,8 +51,9 @@ export const EDITOR_JS_TOOLS = {
   },
   delimiter: Delimiter,
   inlineCode: InlineCode,
-  simpleImage: SimpleImage,
-  code: CodeFlask,
+  image: {
+    class: SimpleImage,
+  },
   alignment: {
     class: AlignmentTool,
     config:{

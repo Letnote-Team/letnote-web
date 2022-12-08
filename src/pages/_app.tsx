@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </NoteProvider>
         </ToastProvider>
       </Hydrate>
-      <ReactQueryDevtools initialIsOpen={true} />
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
     </QueryClientProvider>
   );
 }

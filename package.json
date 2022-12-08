@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ajite/editorjs-image-base64": "^0.0.2",
     "@atlaskit/tree": "^8.6.3",
     "@calumk/editorjs-codeflask": "^1.0.9",
     "@calumk/editorjs-columns": "^0.2.4",

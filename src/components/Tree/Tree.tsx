@@ -53,7 +53,7 @@ export const Tree = ({ tree }: TreeProps) => {
 
     updateNote({
       id,
-      parentId: Number(newParentId) === 0 ? null : Number(newParentId),
+      parentId: Number(newParentId),
     });
   };
 

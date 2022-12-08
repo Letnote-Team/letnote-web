@@ -65,7 +65,7 @@ const TreeLayout = ({ children }: { children?: ReactNode }) => {
           <button
             onClick={() => {
               destroyCookie(null, "letnote.user", { path: "/" });
-              router.push("/product");
+              (window as Window).location = "/product";
             }}
             className="outline-none"
           >

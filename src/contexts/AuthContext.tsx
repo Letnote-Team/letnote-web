@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       desc: "Autenticado com sucesso.",
       type: "success",
     });
-    Router.push("/");
+    (window as Window).location = "/";
   };
 
   const signIn: SignInType = async (email, password) => {

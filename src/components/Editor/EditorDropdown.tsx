@@ -4,23 +4,31 @@ import {
   DownloadIcon,
   HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { saveAs } from "file-saver";
 import { useNote } from "../../hooks/useNote";
 import { NoteType } from "../../contexts/NoteContext";
 
-export const EditorDropdown = ({ handleOnChange }: any) => {
+type EditorDropdownProps = {
+  handleOnChange: (prop: string) => void;
+};
+
+export const EditorDropdown = ({ handleOnChange }: EditorDropdownProps) => {
   const { currentNote, setCurrentNote } = useNote();
-  const [model, setModel] = useState(currentNote?.body.noteModel ?? "linear");
+  const [model, setModel] = useState(currentNote?.body?.noteModel ?? "linear");
 
   const handleDownload = () => {
-    const { id: _, parentId: __, ...note } = currentNote as NoteType;
+    const { id: _, parent_id: __, ...note } = currentNote as NoteType;
 
     const file = new Blob([JSON.stringify(note)], {
       type: "application/json",
     });
     saveAs(file, currentNote?.title + ".json");
   };
+
+  useEffect(() => {
+    setModel(currentNote?.body?.noteModel ?? "linear");
+  }, [currentNote]);
 
   return (
     <DropdownMenu.Root>
@@ -41,7 +49,11 @@ export const EditorDropdown = ({ handleOnChange }: any) => {
           <DropdownMenu.RadioGroup
             value={model}
             onValueChange={(value) => {
-              setModel(value);
+              setCurrentNote((prev) =>
+                prev
+                  ? { ...prev, body: { ...prev.body, noteModel: value } }
+                  : prev
+              );
               handleOnChange(value);
             }}
             className="w-full"
